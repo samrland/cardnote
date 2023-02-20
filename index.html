@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>CardNote</title>
+
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+</head>
+
+<body>
+    <div id="wrap">
+        <div id="sidebar" class="sidenav">
+            <div class="file">
+                <h1><i class="material-icons">description</i> LOGO</h1>
+            </div>
+
+            <div id="files" class="files"></div>
+        </div>
+
+        <div id="main" class="main">
+            <h1 oninput="save()" contenteditable="false" class="title" id="title"></h1>
+
+            <textarea oninput="save()" contenteditable="false" class="contents" id="contents" placeholder="Start typing..." />
+
+            <p id="splashtext" class="hidden">Select a document or create one with the panel on the left.</p>
+        </div>
+
+    </div>
+
+    <div class="context-menu" id="context-menu">
+        <div id="menu-title"  class="menu-title">Title</div>
+        <div id="renameBtn"   class="menu-option">Rename</div>
+        <div id="deleteBtn"   class="menu-option">Delete</div>
+        <div id="downloadBtn" class="menu-option">Download</div>
+    </div>
+</body>
+
+</html>
