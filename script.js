@@ -46,12 +46,11 @@ function loadFileList() {
 }
 
 function loadFiles() {
-    let scroll = document.getElementById('files').scrollTop
+    let scroll = document.querySelector('#files').scrollTop
     clearFiles()
 
     for (let item of files) {
         let fileDiv = document.createElement('div')
-        let fileContainer = document.getElementById('files')
 
         fileDiv.addEventListener('click', () => {
             loadFile(item)
@@ -95,45 +94,45 @@ function loadFiles() {
         })
         fileDiv.appendChild(editBtn)
 
-        fileContainer.appendChild(fileDiv)
+        document.querySelector('#files').appendChild(fileDiv)
     }
 
     createTools()
-    document.getElementById('files').scrollTop = scroll
+    document.querySelector('#files').scrollTop = scroll
 }
 
 function loadFile(item) {
     loadFiles()
 
-    let splashtext = document.getElementById('splashtext')
+    let splashtext = document.querySelector('#splashtext')
     splashtext.classList.add('hidden')
 
-    let fileContent = document.getElementById('contents')
-    let fileName = document.getElementById('title')
+    let fileContent = document.querySelector('#contents')
+    let fileName = document.querySelector('#title')
     fileContent.classList.remove('hidden')
     fileName.innerText = item.name
 
     fileContent.value = localStorage.getItem(item.name)
 
-    let selectionDiv = document.getElementById('file_' + item.name)
+    let selectionDiv = document.querySelector('#file_' + item.name)
     if (selectionDiv == null) {
        showSplashScreen()
     } else {
-        document.getElemenById('file_' + item.name).classList.add('selected')
+        document.querySelector('#file_' + item.name).classList.add('selected')
     }
 
     autoExpand(fileContent)
 }
 
 function save() {
-    let fileContent = document.getElementById('contents')
-    let fileName    = document.getElementById('title')
+    let fileContent = document.querySelector('#contents')
+    let fileName    = document.querySelector('#title')
 
     localStorage.setItem(fileName.innerText, fileContent.value)
 }
 
 function createFile(fileName, fileContent) {
-    if (fileName == 'fileList' || fileName == '' || fileList.includes(fileName) || fileName == 'notedllama') { // todo also remember to add check for used filenames
+    if (fileName == 'fileList' || fileName == '' || fileList.includes(fileName) || fileName == 'notedllama' || fileName.split(' ').length > 1) {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -156,18 +155,16 @@ function createFile(fileName, fileContent) {
 }
 
 function clearFiles() {
-   document.getElementById('sidebar').innerHTML = `<div onclick='showSplashScreen()' class='noselect'><h1 class='logo'><i class='material-icons'>description</i> CardNote</h1></div><hr class='top-hr'>`
+   document.querySelector('#sidebar').innerHTML = `<div onclick='showSplashScreen()' class='noselect'><h1 class='logo'><i class='material-icons'>description</i> CardNote</h1></div><hr class='top-hr'>`
 
     let fileContainer       = document.createElement('div')
     fileContainer.id        = 'files'
     fileContainer.className = 'files'
 
-    document.getElementById('sidebar').appendChild(fileContainer)
+    document.querySelector('#sidebar').appendChild(fileContainer)
 }
 
 function createTools() {
-    let sidebar = document.getElementById('sidebar')
-
     let toolbox = document.createElement('div')
     toolbox.className = 'toolbox'
 
@@ -199,7 +196,7 @@ function createTools() {
     toolbox.appendChild(uploadButton)
     toolbox.appendChild(clearButton)
 
-    sidebar.appendChild(toolbox)
+    document.querySelector('#sidebar').appendChild(toolbox)
 }
 
 async function askFileName() {
@@ -218,10 +215,13 @@ async function askFileName() {
             if (fileList.includes(value)) {
                 return 'Sorry, that name is taken. (Déjà vu?)'
             }
+            if (value.split(' ').length > 1) {
+                return 'Sorry, but spaces currently do not work in file names.'
+            }
         }
     }).then((result) => {
         if (result.value) {
-            createFile(result.value, '')
+            createFile(result.value, 'Start typing...')
         }
     })
 }
@@ -234,7 +234,7 @@ async function askRemoveFile(name) {
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: `'Yes, delete ${escapeHtml(name)}!`
+        confirmButtonText: `Yes, delete ${escapeHtml(name)}!`
     }).then((result) => {
         if (result.value) {
             removeFile(name, true)     
@@ -276,14 +276,11 @@ function removeFile(name, showToast) {
 function showSplashScreen() {
     loadFiles()
 
-    let fileContent = document.getElementById('contents')
-    let fileName = document.getElementById('title')
-    fileName.innerText = 'CardNote'
-    fileContent.classList.add('hidden')
+    document.querySelector('#title').innerText = 'CardNote'
+    document.querySelector('#contents').classList.add('hidden')
 
-    let splashtext = document.getElementById('splashtext')
-    splashtext.classList.remove('hidden')
-    splashtext.innerHTML = 'Select a document or create one with the panel on the left.'
+    document.querySelector('#splashtext').classList.remove('hidden')
+    document.querySelector('#splashtext').innerHTML = 'Select a document or create one with the panel on the left.'
 }
 
 function renameFile(oldName, newName) {
@@ -445,22 +442,21 @@ async function uploadFile() {
     }
 }
 
-
 function createContextMenu(x, y, file) {
-    let oldElement = document.getElementById('context-menu')
+    let oldElement = document.querySelector('#context-menu')
     let newElement = oldElement.cloneNode(true)
     oldElement.parentNode.replaceChild(newElement, oldElement)
 
-    let contextDiv = document.getElementById('context-menu')
+    let contextDiv = document.querySelector('#context-menu')
     contextDiv.style.top     = y + 'px'
     contextDiv.style.left    = x + 'px'
     contextDiv.style.display = 'block'
 
-    let menuTitle = document.getElementById('menu-title')
+    let menuTitle = document.querySelector('#menu-title')
 
-    let renameBtn   = document.getElementById('renameBtn')
-    let deleteBtn   = document.getElementById('deleteBtn')
-    let downloadBtn = document.getElementById('downloadBtn')
+    let renameBtn   = document.querySelector('#renameBtn')
+    let deleteBtn   = document.querySelector('#deleteBtn')
+    let downloadBtn = document.querySelector('#downloadBtn')
 
     menuTitle.innerText = file.name
 
@@ -482,12 +478,24 @@ function createContextMenu(x, y, file) {
     })
 
     window.addEventListener('click', () => {
-       let contextDiv = document.getElementById('context-menu')
-       contextDiv.style.display = 'none'
+       document.querySelector('#context-menu').style.display = 'none'
     })
 }
 
+function wordWrap() {
+
+}
+
 window.addEventListener('click', () => {
-    let contextDiv = document.getElementById('context-menu')
-    contextDiv.style.display = 'none'
+    document.querySelector('#context-menu').style.display = 'none'
 })
+
+// document.querySelector('#wordwrap-button').addEventListener('click', () => {
+//     if (document.querySelector('#contents').hasClass('wrap-text')) {
+//         document.querySelector('#contents').removeClass('wrap-text')
+//         localStorage.setItem('wrap-text', false)
+//     } else {
+//         document.querySelector('#contents').addClass('wrap-text')
+//         localStorage.setItem('wrap-text', true)
+//     }
+// })
