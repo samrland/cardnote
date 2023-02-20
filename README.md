@@ -1,5 +1,5 @@
 # CardNote
-CardNote is a (currently very rough) note-taking app based on jeffallo's [written](https://github.com/jeffalo/written).
+CardNote is a (currently very rough) note-taking app based on jeffalo's [written](https://github.com/jeffalo/written).
 
 It is designed to be a very simple notes service that gives enough features for it to be useful, but just limits itself
 enough to give a perfect minimal experience.
